@@ -6,3 +6,10 @@ export const showShortAddress = (address?: string): string => {
     address.length - 1
   )}`;
 };
+
+export const showTransactionHash = (transHash: string) => {
+  return `${transHash?.substring(0, 10)}${"".padStart(
+    5,
+    "*"
+  )}${transHash?.substring(transHash.length - 10, transHash.length)}`;
+};

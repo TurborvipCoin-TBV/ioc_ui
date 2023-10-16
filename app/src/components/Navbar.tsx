@@ -1,10 +1,7 @@
-"use client";
-
 import {
   Box,
   Flex,
   Avatar,
-  Text,
   Button,
   Menu,
   MenuButton,
@@ -15,16 +12,28 @@ import {
   Stack,
   useColorMode,
   Center,
+  HStack,
+  IconButton,
+  useDisclosure,
 } from "@chakra-ui/react";
-import { MoonIcon, SunIcon } from "@chakra-ui/icons";
-import ConnectWalletBtn from "./ConnectWalletBtn";
+import { CloseIcon, HamburgerIcon, MoonIcon, SunIcon } from "@chakra-ui/icons";
+import { menus } from "../constants";
+import { IMenu } from "../_types_";
+import { useAppDispatch, useAppSelector } from "../reduxs/hooks";
+import { ethers } from "ethers";
+import {
+  setWalletInfo,
+  setWeb3Provider,
+} from "../reduxs/accounts/account.slice";
+import { ConnectWalletBtn } from ".";
 
 interface Props {
   children: React.ReactNode;
+  href: string;
 }
 
 const NavLink = (props: Props) => {
-  const { children } = props;
+  const { children, href } = props;
 
   return (
     <Box
@@ -36,31 +45,76 @@ const NavLink = (props: Props) => {
         textDecoration: "none",
         bg: useColorModeValue("gray.200", "gray.700"),
       }}
-      href={"#"}
+      href={href}
     >
       {children}
     </Box>
   );
 };
 
+const Links = menus;
+
 export default function Navbar() {
+  const dispatch = useAppDispatch();
+  const { wallet, Wed3Provider } = useAppSelector((state) => state.account);
+
   const { colorMode, toggleColorMode } = useColorMode();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const onConnectMetaMask = async () => {
+    if (window.ethereum) {
+      const provider = new ethers.providers.Web3Provider(
+        window.ethereum,
+        undefined
+      );
 
+      await provider.send("eth_requestAccounts", []);
+      const signer = provider.getSigner();
+      const address = await signer.getAddress();
+      const bigBalance = await signer.getBalance();
+      const ethBalance = Number.parseFloat(
+        ethers.utils.formatEther(bigBalance)
+      );
+      dispatch(setWalletInfo({ address, amount: ethBalance }));
+      dispatch(setWeb3Provider(provider));
+    }
+  };
 
   return (
     <>
       <Box bg={useColorModeValue("gray.100", "gray.900")} px={4}>
         <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
-          <Box>Logo</Box>
-
+          <IconButton
+            size={"md"}
+            icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
+            aria-label={"Open Menu"}
+            display={{ md: "none" }}
+            onClick={isOpen ? onClose : onOpen}
+          />
+          <HStack
+            spacing={8}
+            alignItems={"center"}
+            color={useColorModeValue("gray.900", "gray.100")}
+          >
+            <Box>Logo</Box>
+            <HStack
+              as={"nav"}
+              spacing={4}
+              display={{ base: "none", md: "flex" }}
+            >
+              {Links.map((link: IMenu) => (
+                <NavLink key={link.name} href={link.url}>
+                  {link.name}
+                </NavLink>
+              ))}
+            </HStack>
+          </HStack>
           <Flex alignItems={"center"}>
             <Stack direction={"row"} spacing={7}>
-              
-
               <Button onClick={toggleColorMode}>
                 {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
               </Button>
+              {!wallet && <ConnectWalletBtn onClick={onConnectMetaMask} />}
               <Menu>
                 <MenuButton
                   as={Button}

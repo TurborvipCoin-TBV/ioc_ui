@@ -21,3 +21,8 @@ export interface IPacket {
   bg: string;
   token: TOKEN;
 }
+
+export interface IMenu {
+  name:string,
+  url:string
+}

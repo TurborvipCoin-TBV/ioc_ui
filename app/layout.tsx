@@ -1,4 +1,5 @@
 import { Providers } from "./providers";
+import MainLayout from "./src/layouts";
 
 export const metadata = {
   title: "Next.js",
@@ -12,8 +13,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
-        <Providers>{children}</Providers>
+      <body suppressHydrationWarning={true}>
+        <Providers>
+          <MainLayout>
+          {children}
+          </MainLayout>
+          </Providers>
       </body>
     </html>
   );

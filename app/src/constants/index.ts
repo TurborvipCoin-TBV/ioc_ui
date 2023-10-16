@@ -1,10 +1,15 @@
-import { IPacket, TOKEN } from "../_types_";
+import { IMenu, IPacket, TOKEN } from "../_types_";
+
+export const menus: IMenu[] = [
+  { name: "Invest", url: "/pages/api/invests" },
+  { name: "Market", url: "/market" },
+];
 
 export const packages: IPacket[] = [
   {
     key: "eth-001",
     name: "ETH package 01",
-    amount: 1000,
+    amount: 10,
     bg: "eth_bg.jpg",
     icon: "eth.png",
     token: TOKEN.ETH,
@@ -12,7 +17,7 @@ export const packages: IPacket[] = [
   {
     key: "eth-002",
     name: "ETH package 02",
-    amount: 3000,
+    amount: 300,
     bg: "eth_bg.jpg",
     icon: "eth.png",
     token: TOKEN.ETH,
@@ -20,7 +25,7 @@ export const packages: IPacket[] = [
   {
     key: "eth-003",
     name: "ETH package 03",
-    amount: 1500,
+    amount: 150,
     bg: "eth_bg.jpg",
     icon: "eth.png",
     token: TOKEN.ETH,
@@ -28,7 +33,7 @@ export const packages: IPacket[] = [
   {
     key: "usdt-001",
     name: "USDT package 01",
-    amount: 1000,
+    amount: 10,
     bg: "usdt_bg.jpg",
     icon: "usdt.png",
     token: TOKEN.USDT,
