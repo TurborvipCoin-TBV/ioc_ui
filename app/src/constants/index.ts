@@ -1,8 +1,8 @@
 import { IMenu, IPacket, TOKEN } from "../_types_";
 
 export const menus: IMenu[] = [
-  { name: "Invest", url: "/pages/api/invests" },
-  { name: "Market", url: "/market" },
+  { name: "Invest", url: "/pages/invests" },
+  { name: "Market", url: "/pages/markets" },
 ];
 
 export const packages: IPacket[] = [

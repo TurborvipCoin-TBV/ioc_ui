@@ -56,7 +56,7 @@ const Links = menus;
 
 export default function Navbar() {
   const dispatch = useAppDispatch();
-  const { wallet, Wed3Provider } = useAppSelector((state) => state.account);
+  const { wallet } = useAppSelector((state) => state.account);
 
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();

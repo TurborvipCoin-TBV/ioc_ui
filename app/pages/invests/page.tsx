@@ -8,13 +8,13 @@ import {
   Spacer,
   useDisclosure,
 } from "@chakra-ui/react";
-import WalletInfor from "../../../src/components/WalletInfor";
-import { IPacket, IRate, TOKEN } from "../../../src/_types_";
-import { packages } from "../../../src/constants";
+import WalletInfor from "../../src/components/WalletInfor";
+import { IPacket, IRate, TOKEN } from "../../src/_types_";
+import { packages } from "../../src/constants";
 import InvestCard from "./components/InvestCard";
-import CrowdSaleContract from "../../../src/contracts/CrowdSale.contract";
-import UsdtContract from "../../../src/contracts/USDT.constract";
-import { SuccessModal } from "../../../src/components";
+import CrowdSaleContract from "../../src/contracts/CrowdSale.contract";
+import UsdtContract from "../../src/contracts/USDT.constract";
+import { SuccessModal } from "../../src/components";
 import { useAppSelector } from "app/src/reduxs/hooks";
 
 export default function Invest() {
