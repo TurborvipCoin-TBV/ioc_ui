@@ -25,7 +25,7 @@ import {
   setWalletInfo,
   setWeb3Provider,
 } from "../reduxs/accounts/account.slice";
-import { ConnectWalletBtn } from ".";
+import { ConnectWalletBtn, WalletInfor } from ".";
 
 interface Props {
   children: React.ReactNode;
@@ -115,6 +115,12 @@ export default function Navbar() {
                 {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
               </Button>
               {!wallet && <ConnectWalletBtn onClick={onConnectMetaMask} />}
+              {wallet && (
+                <WalletInfor
+                  address={wallet?.address}
+                  amount={wallet?.amount || 0}
+                />
+              )}
               <Menu>
                 <MenuButton
                   as={Button}

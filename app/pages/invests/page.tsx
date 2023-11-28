@@ -18,7 +18,7 @@ import { SuccessModal } from "../../src/components";
 import { useAppSelector } from "app/src/reduxs/hooks";
 
 export default function Invest() {
-  const { wallet, Wed3Provider } = useAppSelector((state) => state.account);
+  const { wallet, wed3Provider } = useAppSelector((state) => state.account);
 
   const [rate, setRate] = useState<IRate>({ ethRate: 0, usdtRate: 0 });
   const [isProcessing, setIsProcessing] = useState<Boolean>(false);
@@ -39,14 +39,14 @@ export default function Invest() {
   }, []);
 
   const handleBuyIco = async (pk: IPacket) => {
-    if (!Wed3Provider) return;
+    if (!wed3Provider) return;
     setPak(pk);
     setIsProcessing(true);
     let hash = "";
-    const crowdContract = new CrowdSaleContract(Wed3Provider);
+    const crowdContract = new CrowdSaleContract(wed3Provider);
 
     if (pk.token === TOKEN.USDT) {
-      const usdtContract = new UsdtContract(Wed3Provider);
+      const usdtContract = new UsdtContract(wed3Provider);
       await usdtContract.approve(
         crowdContract._contractAddress,
         pk.amount / rate.ethRate
@@ -75,9 +75,7 @@ export default function Invest() {
         </Heading>
         <Spacer />
 
-        {wallet && (
-          <WalletInfor address={wallet?.address} amount={wallet?.amount || 0} />
-        )}
+        
       </Flex>
       <SimpleGrid columns={{ base: 1, lg: 3 }} spacingY={"20px"}>
         {packages.map((pk, index) => (
