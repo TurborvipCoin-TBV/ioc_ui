@@ -3,6 +3,7 @@ import { IMenu, IPacket, TOKEN } from "../_types_";
 export const menus: IMenu[] = [
   { name: "Invest", url: "/pages/invests" },
   { name: "Market", url: "/pages/markets" },
+  { name: "P2P", url: "/pages/p2p" },
 ];
 
 export const packages: IPacket[] = [

@@ -29,8 +29,16 @@ const Button: ComponentStyleConfig = {
     },
   },
 };
+
+const Toast: ComponentStyleConfig = {
+  variants: {
+   
+  },
+};
+
 const components = {
-  Button
+  Button,
+  Toast
 }
 
 const theme = extendTheme({

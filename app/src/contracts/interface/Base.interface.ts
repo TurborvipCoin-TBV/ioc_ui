@@ -1,5 +1,4 @@
 import { TransactionResponse } from "@ethersproject/abstract-provider";
-import { EtherscanProvider } from "@ethersproject/providers";
 import { BigNumber, ethers, Overrides } from "ethers";
 
 export default class BaseInterface {

@@ -42,7 +42,7 @@ export interface INftItem {
   image?:string,
   attributes?:IAtribute[];
   // Listing
-  priceListing?:number;
+  price?:number;
   author?:string;
   // Auction
   owner?:string,

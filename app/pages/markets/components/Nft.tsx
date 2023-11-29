@@ -5,7 +5,9 @@ import {
   HStack,
   Image,
   SimpleGrid,
+  Stack,
   Text,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { ActionType, Clarity, INftItem } from "app/src/_types_";
 
@@ -28,15 +30,7 @@ export default function Ntf({
   isAuction,
   onAction,
 }: IProps) {
-  const checkClarity = (item: INftItem) => {
-    let clarity = 0;
-    let traitType =
-      item?.attributes?.find((p) => p.trait_type === "Rarity")?.value || null;
-    if (typeof traitType == "number") {
-      clarity = traitType;
-    }
-    return Clarity[clarity];
-  };
+  
 
   return (
     <Box>
@@ -73,6 +67,9 @@ export default function Ntf({
             </Text>
           </HStack>
         </Box>
+        <Stack textAlign={'center'} p={2}>
+        <Text as={'b'} fontSize={'md'} color={useColorModeValue("gray.300", "white")}>{item?.name}</Text>
+        </Stack>
         <Text>
           {isList && isAuction && (
             <SimpleGrid w={"full"} paddingTop={3} columns={2} spacingX={"10px"}>
@@ -101,8 +98,27 @@ export default function Ntf({
               Transfer
             </Button>
           )}
+          {isUnList && (
+            <Button
+              variant={"primary"}
+              w={"full"}
+              mt={"10px"}
+              onClick={() => onAction && onAction("UNLIST")}
+            >
+              UnList
+            </Button>
+          )}
         </Text>
       </Flex>
     </Box>
   );
 }
+export const checkClarity = (item: INftItem) => {
+  let clarity = 0;
+  let traitType =
+    item?.attributes?.find((p) => p.trait_type === "Rarity")?.value || null;
+  if (typeof traitType == "number") {
+    clarity = traitType;
+  }
+  return Clarity[clarity];
+};

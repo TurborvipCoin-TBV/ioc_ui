@@ -3,10 +3,20 @@ import { Erc721 } from "./interface";
 import { getNFTAddress } from "./utils/getAddress";
 import { getNftAbi } from "./utils/getAbis";
 import { INftItem } from "../_types_";
+import { getRPC } from "./utils/common";
 
 export default class NftContract extends Erc721 {
-  constructor(provider: ethers.providers.Web3Provider) {
-    super(provider, getNFTAddress(), getNftAbi());
+  constructor(provider?: ethers.providers.Web3Provider) {
+    const rpcProvider = new ethers.providers.JsonRpcProvider(getRPC());
+    super(provider || rpcProvider, getNFTAddress(), getNftAbi());
+
+    if(!provider){
+      this._contract = new ethers.Contract(
+        this._contractAddress,
+        this._abis,
+        rpcProvider
+      )
+    }
   }
 
   private _listTokenIds = async (address: string) => {
@@ -32,7 +42,7 @@ export default class NftContract extends Erc721 {
       nfts.map(async (o: any) => {
         const tokenUrl = await this._contract.tokenURI(o.tokenId);
         const obj = await (await fetch(`${tokenUrl}.json)`)).json();
-        const item: INftItem = { ...obj, id: o.tokenId, author: o.author };
+        const item: INftItem = { ...obj, id: o.tokenId, author: o.author, price: o.price };
         return item;
       })
     );

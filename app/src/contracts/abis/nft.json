@@ -308,7 +308,8 @@
   {
     "inputs": [
       { "internalType": "address", "name": "to", "type": "address" },
-      { "internalType": "uint256", "name": "hero_type", "type": "uint256" }
+      { "internalType": "uint256", "name": "hero_type", "type": "uint256" },
+      { "internalType": "string", "name": "tokenURI", "type": "string" }
     ],
     "name": "mint",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],

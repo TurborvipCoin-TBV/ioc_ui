@@ -1,3 +1,4 @@
+import { createStandaloneToast } from '@chakra-ui/react'
 import { Providers } from "./providers";
 import MainLayout from "./src/layouts";
 
@@ -15,10 +16,9 @@ export default function RootLayout({
     <html lang="en">
       <body suppressHydrationWarning={true}>
         <Providers>
-          <MainLayout>
-          {children}
-          </MainLayout>
-          </Providers>
+          <MainLayout>{children}</MainLayout>
+          {/* <ToastContainer /> */}
+        </Providers>
       </body>
     </html>
   );

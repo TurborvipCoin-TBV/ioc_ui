@@ -16,7 +16,7 @@ function MainLayout({ children }: IProps) {
   return (
     <>
       <Navbar />
-      <Flex>{children}</Flex>
+      <Flex minHeight={600}>{children}</Flex>
       <Footer />
     </>
   );

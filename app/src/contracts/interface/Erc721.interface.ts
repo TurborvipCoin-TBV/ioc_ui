@@ -4,7 +4,7 @@ import { TransactionResponse } from "@ethersproject/providers";
 
 class Erc721 extends BaseInterface {
   constructor(
-    provider: ethers.providers.Web3Provider,
+    provider: ethers.providers.Web3Provider | ethers.providers.JsonRpcProvider,
     address: string,
     abi: ethers.ContractInterface
   ) {

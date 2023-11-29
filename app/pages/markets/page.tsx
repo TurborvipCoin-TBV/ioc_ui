@@ -7,6 +7,9 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
+  Wrap,
+  WrapItem,
+  createStandaloneToast,
   useBoolean,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -19,7 +22,8 @@ import Nft from "./components/Nft";
 import { SuccessModal } from "app/src/components";
 import ProcessingModal from "app/src/components/ProcessingModal";
 import ListModal from "./components/ListModal";
-//add main commit
+
+const { toast } = createStandaloneToast();
 const Market = () => {
   const { wallet, wed3Provider } = useAppSelector((state) => state.account);
 
@@ -43,7 +47,6 @@ const Market = () => {
     if (!wed3Provider || !wallet || !wallet.address) return;
     const nftContract = new NftContract(wed3Provider);
     const nfts = await nftContract.getListNFT(wallet.address);
-    console.log('nfts',nfts,wallet.address)
     setNfts(nfts.filter((p) => p.name));
     const marketContract = new MarketContract(wed3Provider);
     const ids = await marketContract.getNFTListedOnMarketplace();
@@ -53,33 +56,7 @@ const Market = () => {
 
   useEffect(() => {
     getListNft();
-  }, [getListNft,wallet]);
-
-  const selectAction = async (ac: ActionType, item: INftItem) => {
-    if ((ac !== "LIST" && ac !== "UNLIST") || !wed3Provider) return;
-    setNft(item);
-    setAction(ac);
-    setIsListing.off();
-    switch (ac) {
-      case "LIST": {
-        setIsOpen.on();
-        break;
-      }
-      case "UNLIST": {
-        setIsUnList.on();
-        const marketContract = new MarketContract(wed3Provider);
-        const tx = await marketContract.unListNft(item.id);
-        setTxHash(tx);
-        setAction(undefined);
-        setNft(undefined);
-        setIsUnList.off();
-        await getListNft();
-        break;
-      }
-      default:
-        break;
-    }
-  };
+  }, [getListNft, wallet]);
 
   const handleListNft = async (price: number) => {
     if (!price || !wed3Provider || !wallet || !nft) return;
@@ -88,6 +65,7 @@ const Market = () => {
       const nftContract = new NftContract(wed3Provider);
       const marketContract = new MarketContract(wed3Provider);
       await nftContract.approve(marketContract._contractAddress, nft.id);
+      console.log("hi");
       const tx = await marketContract.listNft(nft.id, price);
       setTxHash(tx);
       onOpenSuccess();
@@ -96,7 +74,61 @@ const Market = () => {
       setIsOpen.off();
       await getListNft();
     } catch (error: any) {
-      console.log(error);
+      toast({
+        title: error?.message || "Something error !",
+        status: "error",
+        isClosable: true,
+        position: "top-right",
+      });
+      setIsOpen.off();
+    }
+  };
+
+  const handleUnListNft = async (item: INftItem) => {
+    try {
+      if (!wed3Provider)
+        throw Error("Connect wallet MarketContract provider is undefined");
+
+      setIsUnList.on();
+      const marketContract = new MarketContract(wed3Provider);
+      const tx = await marketContract.unListNft(item.id);
+      setTxHash(tx);
+      setAction(undefined);
+      setNft(undefined);
+      setIsUnList.off();
+      onOpenSuccess();
+      await getListNft();
+    } catch (error: any) {
+      throw error;
+    }
+  };
+
+  const selectAction = async (ac: ActionType, item: INftItem) => {
+    try {
+      if ((ac !== "LIST" && ac !== "UNLIST") || !wed3Provider) return;
+      setNft(item);
+      setAction(ac);
+      setIsListing.off();
+      switch (ac) {
+        case "LIST": {
+          setIsOpen.on();
+          break;
+        }
+        case "UNLIST": {
+          handleUnListNft(item);
+          break;
+        }
+        default:
+          break;
+      }
+    } catch (error: any) {
+      toast({
+        title: error?.message || "Something error !",
+        status: "error",
+        isClosable: true,
+        position: "top-right",
+      });
+      setIsUnList.off();
     }
   };
 
@@ -127,9 +159,9 @@ const Market = () => {
             active listings
           </Tab>
         </TabList>
-        <TabPanels> 
+        <TabPanels>
           <TabPanel>
-            <SimpleGrid w={'full'} columns={4} spacing={10}>
+            <SimpleGrid w={"full"} columns={4} spacing={10}>
               {nfts.map((nft, index) => (
                 <Nft
                   item={nft}
@@ -144,7 +176,7 @@ const Market = () => {
             </SimpleGrid>
           </TabPanel>
           <TabPanel>
-            <SimpleGrid w={"full"} column={4} spacing={10}>
+            <SimpleGrid w={"full"} columns={4} spacing={10}>
               {nftsListed.map((nft, index) => (
                 <Nft
                   item={nft}
@@ -171,7 +203,7 @@ const Market = () => {
         title={"List  - UnList NFT"}
         isOpen={isSuccess}
         onClose={onCloseSuccess}
-      ></SuccessModal>
+      />
     </Flex>
   );
 };
