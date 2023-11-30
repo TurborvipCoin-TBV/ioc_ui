@@ -1,4 +1,4 @@
-import { Box, Button, HStack, Image, Spinner, Text } from "@chakra-ui/react";
+import { Box, Button, HStack, Image, Spinner, Text, useColorModeValue } from "@chakra-ui/react";
 import { IPacket, IWalletInfo } from "app/src/_types_";
 import { numberFormat } from "app/src/utils";
 
@@ -19,7 +19,8 @@ function InvestCard({ pak, rate, isBuying, walletInfo, onBuy }: IProps) {
         borderRadius={"16px"}
         overflow={"hidden"}
         padding={"10px"}
-        border={"1px solid rgba(254,223,86,6)"}
+        border={"1px solid"}
+        borderColor={useColorModeValue("gray.600", "rgba(254,223,86,6)")}
         alignItems={"center"}
         display={"flex"}
         flexDirection={"column"}
@@ -37,7 +38,7 @@ function InvestCard({ pak, rate, isBuying, walletInfo, onBuy }: IProps) {
             h="80px"
             margin={"0px auto"}
             borderRadius={"full"}
-            marginTop={"50%"}
+            marginTop={"58%"}
             position={"relative"}
           >
             <Image
@@ -51,11 +52,11 @@ function InvestCard({ pak, rate, isBuying, walletInfo, onBuy }: IProps) {
             />
             <Image
               src={`/verified.png`}
-              w={"50px"}
+              w={"30px"}
               alt="verified"
               position={"absolute"}
-              bottom={"-20%"}
-              right={"-20px"}
+              bottom={"2px"}
+              right={"-3px"}
             />
           </Box>
         </Box>
@@ -67,8 +68,8 @@ function InvestCard({ pak, rate, isBuying, walletInfo, onBuy }: IProps) {
           variant={"primary"}
           my={"20px"}
           bg={"transparent"}
-          border={"1px solid #fff"}
-          color={"rgba(255,255,255,0.7)"}
+          border={"1px solid"}
+          color={useColorModeValue("gray.800", "rgba(255,255,255,0.7)")}
         >
           {numberFormat(pak.amount)} TPV
         </Button>

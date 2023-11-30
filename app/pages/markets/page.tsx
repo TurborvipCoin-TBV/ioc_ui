@@ -11,6 +11,7 @@ import {
   WrapItem,
   createStandaloneToast,
   useBoolean,
+  useColorModeValue,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -67,6 +68,7 @@ const Market = () => {
       const ids = await marketContract.getNFTListedOnMarketplace();
       const listedNfts = await nftContract.getNftInfo(ids);
       setNftsListed(listedNfts);
+      console.log('listedNfts',nfts)
 
       const auctionContract = new AuctionContract();
       const auctionNfts = await auctionContract.getAuctionByStatus();
@@ -221,22 +223,22 @@ const Market = () => {
         >
           <Tab
             textTransform={"uppercase"}
-            color={"#5A5A5A"}
-            _selected={{ borderBottomColor: "white", color: "white" }}
+            color={useColorModeValue("gray.800","white")}
+            _selected={{ borderBottomColor: useColorModeValue("red.600","white"), color: useColorModeValue("red.600","white") }}
           >
             ALL ITEMS
           </Tab>
           <Tab
             textTransform={"uppercase"}
-            color={"#5A5A5A"}
-            _selected={{ borderBottomColor: "white", color: "white" }}
+            color={useColorModeValue("gray.800","white")}
+            _selected={{ borderBottomColor: useColorModeValue("red.600","white"), color: useColorModeValue("red.600","white") }}
           >
             active listings
           </Tab>
           <Tab
             textTransform={"uppercase"}
-            color={"#5A5A5A"}
-            _selected={{ borderBottomColor: "white", color: "white" }}
+            color={useColorModeValue("gray.800","white")}
+            _selected={{ borderBottomColor: useColorModeValue("red.600","white"), color: useColorModeValue("red.600","white") }}
           >
             live auction
           </Tab>

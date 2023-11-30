@@ -1,4 +1,4 @@
-import { Box, Button, Flex, HStack, Image, Spacer, Text, VStack } from '@chakra-ui/react';
+import { Box, Button, Flex, HStack, Image, Spacer, Text, VStack, useColorModeValue } from '@chakra-ui/react';
 import { checkClarity } from 'app/pages/markets/components/Nft';
 import { INftItem } from 'app/src/_types_'
 import { numberFormat } from 'app/src/utils';
@@ -47,7 +47,7 @@ function NftP2P({item,isBuying, isDisable, onAction}:IProps) {
           </HStack>
         </Box>
         <VStack>
-            <Text fontWeight={'bold'} py={'10px'} fontSize={'15px'} textTransform={'uppercase'} letterSpacing={'5px'}>
+            <Text fontWeight={'bold'} py={'10px'} fontSize={'15px'} textTransform={'uppercase'} letterSpacing={'5px'} color={useColorModeValue("gray.300", "white")}>
                 {item.name}
             </Text>
             <HStack w={'full'}>

@@ -8,6 +8,7 @@ import {
   Spacer,
   Text,
   VStack,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { checkClarity } from "app/pages/markets/components/Nft";
 import { IAuctionInfo } from "app/src/_types_";
@@ -62,6 +63,7 @@ function NftAuction({ item, isCancel, onAction }: IProps) {
           fontSize={"15px"}
           textTransform={"uppercase"}
           letterSpacing={"5px"}
+          color={useColorModeValue("gray.300", "white")}
         >
           {item.name}
         </Text>

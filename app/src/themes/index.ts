@@ -27,6 +27,13 @@ const Button: ComponentStyleConfig = {
       padding: "12px 36px",
       border: "1px solid rgba(254,223,86,6) !important",
     },
+    outline_light: {
+      borderRadius: "5px",
+      color: "#0021c6",
+      fontWeight: "bold",
+      padding: "12px 36px",
+      border: "1px solid #0021c6 !important",
+    },
   },
 };
 

@@ -90,7 +90,7 @@ export default function Footer() {
               <Logo color={useColorModeValue("gray.700", "white")} />
             </Box>
             <Text fontSize={"sm"}>
-              © 2022 Chakra Templates. All rights reserved
+              © 2023 Turborvip company. All rights reserved
             </Text>
             <Stack direction={"row"} spacing={6}>
               {/* <SocialButton label={"Twitter"} href={"#"}></SocialButton>

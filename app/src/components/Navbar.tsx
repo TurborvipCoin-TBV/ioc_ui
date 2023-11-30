@@ -1,20 +1,14 @@
 import {
   Box,
   Flex,
-  Avatar,
   Button,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  MenuDivider,
   useColorModeValue,
   Stack,
   useColorMode,
-  Center,
   HStack,
   IconButton,
   useDisclosure,
+  Text,
 } from "@chakra-ui/react";
 import { CloseIcon, HamburgerIcon, MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { menus } from "../constants";
@@ -31,6 +25,13 @@ interface Props {
   children: React.ReactNode;
   href: string;
 }
+
+declare global {
+  interface Window {
+    ethereum?: any;
+  }
+}
+
 
 const NavLink = (props: Props) => {
   const { children, href } = props;
@@ -62,9 +63,10 @@ export default function Navbar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const onConnectMetaMask = async () => {
-    if (window.ethereum) {
+    const ethereum = global?.window?.ethereum;
+    if (window?.ethereum) {
       const provider = new ethers.providers.Web3Provider(
-        window.ethereum,
+        window?.ethereum,
         undefined
       );
 
@@ -96,7 +98,7 @@ export default function Navbar() {
             alignItems={"center"}
             color={useColorModeValue("gray.900", "gray.100")}
           >
-            <Box>Logo</Box>
+            <Box><Text fontWeight={'bold'}>TURBORVIP</Text></Box>
             <HStack
               as={"nav"}
               spacing={4}
@@ -121,7 +123,7 @@ export default function Navbar() {
                   amount={wallet?.amount || 0}
                 />
               )}
-              <Menu>
+              {/* <Menu>
                 <MenuButton
                   as={Button}
                   rounded={"full"}
@@ -152,7 +154,7 @@ export default function Navbar() {
                   <MenuItem>Account Settings</MenuItem>
                   <MenuItem>Logout</MenuItem>
                 </MenuList>
-              </Menu>
+              </Menu> */}
             </Stack>
           </Flex>
         </Flex>
