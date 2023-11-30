@@ -92,7 +92,7 @@ export default function Home() {
           <Text color={"gray.500"}>
             Conquer Challenges, Create Value with TurboVip - NFTs and Coins
             Redefined! Transform challenges into triumphs as you redefine the
-            value of digital assets in the TurboVip ecosystem.
+            value of digital assets in the TurborVip ecosystem.
           </Text>
           <Stack
             direction={"column"}

@@ -13,7 +13,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { ReactNode } from "react";
-import { FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa'
+import { FaGithub, FaSkype, FaFacebook } from 'react-icons/fa'
 import { BiMailSend } from 'react-icons/bi'
 
 const Logo = (props: any) => {
@@ -83,16 +83,16 @@ export default function Footer() {
             <Box>
               <Logo color={useColorModeValue('gray.700', 'white')} />
             </Box>
-            <Text fontSize={'sm'}>© 2022 Chakra Templates. All rights reserved</Text>
+            <Text fontSize={'sm'}>© 2023 from Turborvip developer. All rights reserved</Text>
             <Stack direction={'row'} spacing={6}>
-              <SocialButton label={'Twitter'} href={'#'}>
-                <FaTwitter />
+              <SocialButton label={'Skype'} href={'https://join.skype.com/invite/wWpbeTwdLMEJ'}>
+                <FaSkype />
               </SocialButton>
-              <SocialButton label={'YouTube'} href={'#'}>
-                <FaYoutube />
+              <SocialButton label={'Facebook'} href={'https://www.facebook.com/datdo.ok/'}>
+                <FaFacebook />
               </SocialButton>
-              <SocialButton label={'Instagram'} href={'#'}>
-                <FaInstagram />
+              <SocialButton label={'Github'} href={'https://github.com/turborvip'}>
+                <FaGithub />
               </SocialButton>
             </Stack>
           </Stack>

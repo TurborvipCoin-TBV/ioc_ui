@@ -7,6 +7,7 @@ import {
   SimpleGrid,
   Spacer,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import WalletInfor from "../../src/components/WalletInfor";
 import { IPacket, IRate, TOKEN } from "../../src/_types_";
@@ -16,9 +17,11 @@ import CrowdSaleContract from "../../src/contracts/CrowdSale.contract";
 import UsdtContract from "../../src/contracts/USDT.constract";
 import { SuccessModal } from "../../src/components";
 import { useAppSelector } from "app/src/reduxs/hooks";
+import { getToast } from "app/src/utils";
 
 export default function Invest() {
   const { wallet, wed3Provider } = useAppSelector((state) => state.account);
+  const toast = useToast();
 
   const [rate, setRate] = useState<IRate>({ ethRate: 0, usdtRate: 0 });
   const [isProcessing, setIsProcessing] = useState<Boolean>(false);
@@ -28,10 +31,14 @@ export default function Invest() {
   const { isOpen, onClose, onOpen } = useDisclosure();
 
   const getRate = useCallback(async () => {
-    const crowdContract = new CrowdSaleContract();
-    const ethRate = await crowdContract.getEthRate();
-    const usdtRate = await crowdContract.getUsdtRate();
-    setRate({ ethRate, usdtRate });
+    try {
+      const crowdContract = new CrowdSaleContract();
+      const ethRate = await crowdContract.getEthRate();
+      const usdtRate = await crowdContract.getUsdtRate();
+      setRate({ ethRate, usdtRate });
+    } catch (error: any) {
+      toast(getToast(error));
+    }
   }, []);
 
   useEffect(() => {
@@ -74,8 +81,6 @@ export default function Invest() {
           Blockchain Trainee
         </Heading>
         <Spacer />
-
-        
       </Flex>
       <SimpleGrid columns={{ base: 1, lg: 3 }} spacingY={"20px"}>
         {packages.map((pk, index) => (
