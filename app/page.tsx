@@ -110,14 +110,10 @@ export default function Home() {
                 bg: "green.500",
               }}
             >
-              <Link href='../pages/invests' >
-              Get Started
-              </Link>
+              <Link href="../pages/invests">Get Started</Link>
             </Button>
             <Button variant={"link"} colorScheme={"blue"} size={"sm"}>
-            <Link href='#ourStory' >
-              Learn more
-              </Link>
+              <Link href="#ourStory">Learn more</Link>
             </Button>
             <Box>
               <Icon
@@ -236,7 +232,7 @@ export default function Home() {
           </Flex>
         </SimpleGrid>
 
-        <Box bg={"gray.800"} position={"relative"}>
+        <Box bg={useColorModeValue("white.800","gray.800")} position={"relative"}>
           <Flex
             flex={1}
             zIndex={0}
