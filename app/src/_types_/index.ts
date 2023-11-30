@@ -25,29 +25,29 @@ export interface IPacket {
 }
 
 export interface IMenu {
-  name:string,
-  url:string
+  name: string;
+  url: string;
 }
 
 export interface IAtribute {
   trait_type: string;
-  value: string| number;
+  value: string | number;
 }
 
 export interface INftItem {
   animation_url: string | undefined;
-  id:number;
-  name?:string,
-  description?:string,
-  image?:string,
-  attributes?:IAtribute[];
+  id: number;
+  name?: string;
+  description?: string;
+  image?: string;
+  attributes?: IAtribute[];
   // Listing
-  price?:number;
-  author?:string;
+  price?: number;
+  author?: string;
   // Auction
-  owner?:string,
-  ownerImage?:string,
-  highestBid?:number,
+  owner?: string;
+  ownerImage?: string;
+  highestBid?: number;
 }
 
 export enum Clarity {
@@ -58,8 +58,21 @@ export enum Clarity {
   "E",
   "S",
   "SS",
-  "SSS"
+  "SSS",
 }
 
-export type ActionType = "LIST" | "UNLIST" | "TRANSFER" | "AUCTION"
+export type ActionType = "LIST" | "UNLIST" | "TRANSFER" | "AUCTION";
 
+export interface IAuctionInfo extends INftItem {
+  auctionId: number;
+  auctioneer: string;
+  tokenId: number;
+  initialPrice: number;
+  previousBidder: string;
+  lastBid: number;
+  lastBidder: string;
+  startTime: number;
+  endTime: number;
+  complete: boolean;
+  active: boolean;
+}

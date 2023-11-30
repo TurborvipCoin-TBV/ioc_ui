@@ -16,15 +16,13 @@ import { INftItem } from "app/src/_types_";
 import React, { useState } from "react";
 
 interface IProps extends Omit<ModalProps, "children"> {
-  type: "LISTING" | "AUCTION";
   nft?: INftItem;
-  isListing?: boolean;
-  onList?: (amount: number, expireDate?: Date | null) => void;
+  isProcessing?: boolean;
+  onAuction?: (amount: number) => void;
 }
 
-function ListModal({ nft, isListing, type, onList, ...props }: IProps) {
+function AuctionModal({ nft, onAuction, isProcessing, ...props }: IProps) {
   const [amount, setAmount] = useState<number>(0);
-  const [startDate, setStartDate] = useState<string>();
   return (
     <Modal closeOnOverlayClick={false} {...props}>
       <ModalOverlay
@@ -44,14 +42,7 @@ function ListModal({ nft, isListing, type, onList, ...props }: IProps) {
                 mb={"20px"}
               />
               <Flex w={"full"} direction={"column"}>
-                <Text fontWeight={"bold"}>Price listing</Text>
-                <Text
-                  fontSize={"12px"}
-                  fontStyle={"italic"}
-                  color={"rgba(255,255,255,0,5)"}
-                >
-                  Set your price:{" "}
-                </Text>
+                <Text fontWeight={"bold"}>Set your bid:</Text>
                 <Flex w={"full"} my={"10px"}>
                   <Input
                     w={"full"}
@@ -70,34 +61,12 @@ function ListModal({ nft, isListing, type, onList, ...props }: IProps) {
                   </Text>
                 </Flex>
 
-                {type === "AUCTION" && (
-                  <>
-                    <Text fontWeight={"bold"} mb={"10px"}>
-                      Expiration date:
-                    </Text>
-                      <Input
-                      placeholder="Select Date and Time"
-                      size="md"
-                      type="datetime-local"
-                      value={startDate}
-                      onChange={(e) => setStartDate(e.target.value)}
-                      mb={"10px"}
-                      />
-                  </>
-                )}
-
                 <Button
                   variant={"primary"}
-                  onClick={() => onList && onList(amount, startDate  ? new Date(startDate) : null)}
-                  isDisabled={!amount || isListing}
+                  onClick={() => onAuction && onAuction(amount)}
+                  isDisabled={!amount || isProcessing}
                 >
-                  {isListing ? (
-                    <Spinner />
-                  ) : type === "LISTING" ? (
-                    "List Now"
-                  ) : (
-                    "Auction Now"
-                  )}
+                  {isProcessing ? <Spinner /> : "Place a bid"}
                 </Button>
               </Flex>
             </Flex>
@@ -108,4 +77,4 @@ function ListModal({ nft, isListing, type, onList, ...props }: IProps) {
   );
 }
 
-export default ListModal;
+export default AuctionModal;

@@ -12,8 +12,9 @@ import {
   createStandaloneToast,
   useBoolean,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
-import { ActionType, INftItem } from "app/src/_types_";
+import { ActionType, IAuctionInfo, INftItem } from "app/src/_types_";
 import MarketContract from "app/src/contracts/Market.contract";
 import NftContract from "app/src/contracts/Nft.contract";
 import { useAppSelector } from "app/src/reduxs/hooks";
@@ -22,9 +23,16 @@ import Nft from "./components/Nft";
 import { SuccessModal } from "app/src/components";
 import ProcessingModal from "app/src/components/ProcessingModal";
 import ListModal from "./components/ListModal";
+import TransferModal from "./components/TransferModal";
+import NftAuction from "../auctions/components/NftAuction";
+import { Web3Provider } from "@ethersproject/providers";
+import AuctionContract from "app/src/contracts/Auction.contract";
+import { getToast } from "app/src/utils";
 
 const { toast } = createStandaloneToast();
 const Market = () => {
+
+  const toast = useToast();
   const { wallet, wed3Provider } = useAppSelector((state) => state.account);
 
   const [nfts, setNfts] = useState<INftItem[]>([]);
@@ -37,6 +45,12 @@ const Market = () => {
   const [txHash, setTxHash] = useState<string>();
   const [isUnList, setIsUnList] = useBoolean();
 
+  const [isOpenTransferModal, setOpenTransferModal] = useState<boolean>(false);
+  const [isProcessing, setIsProcessing] = useBoolean();
+
+  const [auctions, setAuctions] = useState<IAuctionInfo[]>([]);
+  const [modalType, setModalType] = useState<"LISTING" | "AUCTION">("LISTING");
+
   const {
     isOpen: isSuccess,
     onClose: onCloseSuccess,
@@ -44,29 +58,91 @@ const Market = () => {
   } = useDisclosure();
 
   const getListNft = useCallback(async () => {
-    if (!wed3Provider || !wallet || !wallet.address) return;
-    const nftContract = new NftContract(wed3Provider);
-    const nfts = await nftContract.getListNFT(wallet.address);
-    setNfts(nfts.filter((p) => p.name));
-    const marketContract = new MarketContract(wed3Provider);
-    const ids = await marketContract.getNFTListedOnMarketplace();
-    const listedNfts = await nftContract.getNftInfo(ids);
-    setNftsListed(listedNfts);
+    try {
+      if (!wed3Provider || !wallet || !wallet.address) return;
+      const nftContract = new NftContract(wed3Provider);
+      const nfts = await nftContract.getListNFT(wallet.address);
+      setNfts(nfts.filter((p) => p.name));
+      const marketContract = new MarketContract(wed3Provider);
+      const ids = await marketContract.getNFTListedOnMarketplace();
+      const listedNfts = await nftContract.getNftInfo(ids);
+      setNftsListed(listedNfts);
+
+      const auctionContract = new AuctionContract();
+      const auctionNfts = await auctionContract.getAuctionByStatus();
+      const myAuctions = auctionNfts.filter(
+        (p) => p.auctioneer === wallet.address
+      );
+      const nftAuctions = await nftContract.getNftAuctionInfo(myAuctions);
+      setAuctions(nftAuctions);
+    } catch (error:any) {
+      toast(getToast(error))
+    }
   }, [wed3Provider, wallet]);
 
   useEffect(() => {
     getListNft();
   }, [getListNft, wallet]);
 
-  const handleListNft = async (price: number) => {
+  const handleCancelAuction = async (nftAuction: IAuctionInfo) => {
+    if(!wed3Provider) return;
+    setIsUnList.on();
+    try {
+      const auctionContract = new AuctionContract(wed3Provider);
+      const tx = await auctionContract.cancelAuction(nftAuction.auctionId);
+      setTxHash(tx);
+      onOpenSuccess();
+      await getListNft();
+    } catch (error:any) {
+      toast(getToast(error))
+    }
+    setIsUnList.off();
+  };
+  const handleTransfer = async (toAddress: string) => {
+    setIsProcessing.on();
+    try {
+      if (!wed3Provider || !nft || !wallet) return;
+      const nftContract = new NftContract(wed3Provider);
+      await nftContract.approve(toAddress, nft.id);
+      const tx = await nftContract.safeTransferFrom(
+        wallet.address || "",
+        toAddress,
+        nft.id
+      );
+
+      setTxHash(tx);
+      setOpenTransferModal(false);
+      onOpenSuccess();
+      await getListNft();
+    } catch (error) {
+      setIsProcessing.off();
+    }
+  };
+
+  const handleListNft = async (price: number, expireDate?: Date | null) => {
     if (!price || !wed3Provider || !wallet || !nft) return;
     setIsListing.on();
     try {
       const nftContract = new NftContract(wed3Provider);
-      const marketContract = new MarketContract(wed3Provider);
-      await nftContract.approve(marketContract._contractAddress, nft.id);
-      console.log("hi");
-      const tx = await marketContract.listNft(nft.id, price);
+      let tx = "";
+      if (modalType === "LISTING") {
+        const marketContract = new MarketContract(wed3Provider);
+        await nftContract.approve(marketContract._contractAddress, nft.id);
+        console.log("hi");
+        tx = await marketContract.listNft(nft.id, price);
+      } else if (modalType === "AUCTION") {
+        if (!expireDate) return;
+        const auctionContract = new AuctionContract(wed3Provider);
+        await nftContract.approve(auctionContract._contractAddress, nft.id);
+        const startTime = Math.round(new Date().getTime() / 1000 + 60);
+        tx = await auctionContract.createAuction(
+          nft.id,
+          price,
+          startTime,
+          Math.round(expireDate.getTime() / 1000)
+        );
+      }
+
       setTxHash(tx);
       onOpenSuccess();
       setAction(undefined);
@@ -74,12 +150,7 @@ const Market = () => {
       setIsOpen.off();
       await getListNft();
     } catch (error: any) {
-      toast({
-        title: error?.message || "Something error !",
-        status: "error",
-        isClosable: true,
-        position: "top-right",
-      });
+      toast(getToast(error))
       setIsOpen.off();
     }
   };
@@ -105,7 +176,7 @@ const Market = () => {
 
   const selectAction = async (ac: ActionType, item: INftItem) => {
     try {
-      if ((ac !== "LIST" && ac !== "UNLIST") || !wed3Provider) return;
+      if (!wed3Provider) return;
       setNft(item);
       setAction(ac);
       setIsListing.off();
@@ -118,16 +189,20 @@ const Market = () => {
           handleUnListNft(item);
           break;
         }
+        case "TRANSFER": {
+          setOpenTransferModal(true);
+          break;
+        }
+        case "AUCTION": {
+          setModalType(ac === "AUCTION" ? "AUCTION" : "LISTING");
+          setIsOpen.on();
+          break;
+        }
         default:
           break;
       }
     } catch (error: any) {
-      toast({
-        title: error?.message || "Something error !",
-        status: "error",
-        isClosable: true,
-        position: "top-right",
-      });
+      toast(getToast(error))
       setIsUnList.off();
     }
   };
@@ -157,6 +232,13 @@ const Market = () => {
             _selected={{ borderBottomColor: "white", color: "white" }}
           >
             active listings
+          </Tab>
+          <Tab
+            textTransform={"uppercase"}
+            color={"#5A5A5A"}
+            _selected={{ borderBottomColor: "white", color: "white" }}
+          >
+            live auction
           </Tab>
         </TabList>
         <TabPanels>
@@ -188,22 +270,42 @@ const Market = () => {
               ))}
             </SimpleGrid>
           </TabPanel>
+          <TabPanel>
+            <SimpleGrid w={"full"} columns={4} spacing={10}>
+              {auctions.map((nft, index) => (
+                <NftAuction
+                  item={nft}
+                  key={index}
+                  isCancel
+                  onAction={async (nft:IAuctionInfo) => handleCancelAuction(nft)}
+                ></NftAuction>
+              ))}
+            </SimpleGrid>
+          </TabPanel>
         </TabPanels>
       </Tabs>
       <ProcessingModal isOpen={isUnList} onClose={() => {}} />
       <ListModal
+        type={modalType}
         isOpen={isOpen}
         nft={nft}
         isListing={isListing}
         onClose={() => setIsOpen.off()}
-        onList={(amount) => handleListNft(amount)}
+        onList={(amount, expireDate) => handleListNft(amount, expireDate)}
       />
       <SuccessModal
         hash={txHash}
-        title={"List  - UnList NFT"}
+        title={modalType =="LISTING" ? "List  - UnList NFT" : "Auction - UnAuction"}
         isOpen={isSuccess}
         onClose={onCloseSuccess}
       />
+      <TransferModal
+        isOpen={isOpenTransferModal}
+        nft={nft}
+        isTransfer={isProcessing}
+        onClose={() => setOpenTransferModal(false)}
+        onTransfer={(toAddress) => handleTransfer(toAddress)}
+      ></TransferModal>
     </Flex>
   );
 };

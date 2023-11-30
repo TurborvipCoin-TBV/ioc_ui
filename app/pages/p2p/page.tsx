@@ -31,8 +31,8 @@ function P2PMarket() {
       const listedList = await marketContract.getNFTListedOnMarketplace();
       const nftList = await nftContract.getNftInfo(listedList);
       setNfts(nftList);
-    } catch (error) {
-      console.log("error", error);
+    } catch (error:any) {
+      toast(getToast(error))
     }
   }, []);
 

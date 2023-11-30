@@ -2,7 +2,7 @@ import { BigNumber, ethers } from "ethers";
 import { Erc721 } from "./interface";
 import { getNFTAddress } from "./utils/getAddress";
 import { getNftAbi } from "./utils/getAbis";
-import { INftItem } from "../_types_";
+import { IAuctionInfo, INftItem } from "../_types_";
 import { getRPC } from "./utils/common";
 
 export default class NftContract extends Erc721 {
@@ -43,6 +43,17 @@ export default class NftContract extends Erc721 {
         const tokenUrl = await this._contract.tokenURI(o.tokenId);
         const obj = await (await fetch(`${tokenUrl}.json)`)).json();
         const item: INftItem = { ...obj, id: o.tokenId, author: o.author, price: o.price };
+        return item;
+      })
+    );
+  };
+
+  getNftAuctionInfo = async (nftAuctions: IAuctionInfo[]) => {
+    return Promise.all(
+      nftAuctions.map(async (o: IAuctionInfo) => {
+        const tokenUrl = await this._contract.tokenURI(o.tokenId);
+        const obj = await (await fetch(`${tokenUrl}.json)`)).json();
+        const item: IAuctionInfo = { ...o, ...obj, id: o.tokenId };
         return item;
       })
     );

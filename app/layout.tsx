@@ -1,4 +1,5 @@
-import { createStandaloneToast } from '@chakra-ui/react'
+import '../app/styles/globals.css'
+import  "react-datepicker/dist/react-datepicker.css"
 import { Providers } from "./providers";
 import MainLayout from "./src/layouts";
 

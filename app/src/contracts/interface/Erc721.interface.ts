@@ -34,9 +34,7 @@ class Erc721 extends BaseInterface {
     toAddress: string,
     tokenId: string | number
   ): Promise<string> {
-    const tx: TransactionResponse = await this._contract[
-      "safeTransferFrom(address,address,uint256)]"
-    ](fromAddress, toAddress, tokenId);
+    const tx: TransactionResponse = await this._contract['safeTransferFrom(address,address,uint256)'](fromAddress, toAddress, tokenId);
     return this._handleTransactionResponse(tx);
   }
 
