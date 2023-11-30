@@ -1,11 +1,11 @@
 import { IMenu, IPacket, TOKEN } from "../_types_";
 
 export const menus: IMenu[] = [
+  { name: "Home", url: "/" },
   { name: "Invest", url: "/pages/invests" },
   { name: "Market", url: "/pages/markets" },
   { name: "P2P", url: "/pages/p2p" },
   { name: "Auction", url: "/pages/auctions" },
-
 ];
 
 export const packages: IPacket[] = [
