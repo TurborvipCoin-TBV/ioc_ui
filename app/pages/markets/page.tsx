@@ -68,7 +68,6 @@ const Market = () => {
       const ids = await marketContract.getNFTListedOnMarketplace();
       const listedNfts = await nftContract.getNftInfo(ids);
       setNftsListed(listedNfts);
-      console.log('listedNfts',nfts)
 
       const auctionContract = new AuctionContract();
       const auctionNfts = await auctionContract.getAuctionByStatus();
