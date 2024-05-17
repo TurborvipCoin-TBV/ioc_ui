@@ -100,7 +100,7 @@ export default function Navbar() {
             alignItems={"center"}
             color={useColorModeValue("gray.900", "gray.100")}
           >
-            <Box><Text fontWeight={'bold'}>TURBORVIP</Text></Box>
+            <Box><Text px={'10px'} fontWeight={'bold'}>TURBORVIP</Text></Box>
             <HStack
               as={"nav"}
               spacing={4}

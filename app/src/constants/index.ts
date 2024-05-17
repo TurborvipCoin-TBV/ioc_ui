@@ -20,7 +20,7 @@ export const packages: IPacket[] = [
   {
     key: "eth-002",
     name: "ETH package 02",
-    amount: 300,
+    amount: 50,
     bg: "eth_bg.png",
     icon: "eth.png",
     token: TOKEN.ETH,

@@ -7,6 +7,7 @@ import { ConnectWalletBtn, SuccessModal, WalletInfor } from "../components";
 import { ethers } from "ethers";
 import { IPacket, IRate, IWalletInfo } from "../_types_";
 import CrowdSaleContract from "../contracts/CrowdSale.contract";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 interface IProps {
   children: ReactNode;
@@ -15,6 +16,7 @@ interface IProps {
 function MainLayout({ children }: IProps) {
   return (
     <>
+      <SpeedInsights />
       <Navbar />
       <Flex minHeight={600}>{children}</Flex>
       <Footer />

@@ -17,6 +17,7 @@
     "@ethersproject/providers": "^5.7.2",
     "@reduxjs/toolkit": "^1.9.7",
     "@types/react-datepicker": "^4.19.3",
+    "@vercel/speed-insights": "^1.0.10",
     "bufferutil": "^4.0.7",
     "ethers": "^5.7.2",
     "framer-motion": "^10.16.4",
